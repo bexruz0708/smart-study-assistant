@@ -1,6 +1,7 @@
 """
 Production sozlamalari (Render, Heroku va h.k. uchun).
 """
+from decouple import config
 import dj_database_url
 
 from .base import *
@@ -20,12 +21,16 @@ DATABASES = {
 }
 
 # Static files - WhiteNoise
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
+
+# WhiteNoise middleware
+if 'whitenoise.middleware.WhiteNoiseMiddleware' not in MIDDLEWARE:
+    MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
 
 # Security
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SECURE_SSL_REDIRECT = config('SECURE_SSL_REDIRECT', default=True, cast=bool)
+SECURE_SSL_REDIRECT = config('SECURE_SSL_REDIRECT', default=False, cast=bool)
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
@@ -35,6 +40,9 @@ CORS_ALLOWED_ORIGINS = config(
     default='https://smart-study.vercel.app',
 ).split(',')
 CORS_ALLOW_CREDENTIALS = True
+
+# Frontend URL (email'larda ishlatish uchun)
+FRONTEND_URL = config('FRONTEND_URL', default='https://smart-study.vercel.app')
 
 # Logging
 LOGGING = {
