@@ -1,0 +1,62 @@
+version: '3.9'
+
+services:
+  # PostgreSQL Database
+  db:
+    image: postgres:16-alpine
+    container_name: smart-study-db
+    environment:
+      POSTGRES_DB: smart_study
+      POSTGRES_USER: smartstudy
+      POSTGRES_PASSWORD: smartstudy123
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U smartstudy"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend (Django + Gunicorn)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: smart-study-backend
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings.production
+      - DEBUG=False
+      - SECRET_KEY=${SECRET_KEY:-django-insecure-change-this-in-production}
+      - DATABASE_URL=postgres://smartstudy:smartstudy123@db:5432/smart_study
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - ALLOWED_HOSTS=localhost,127.0.0.1,backend
+      - CORS_ALLOWED_ORIGINS=http://localhost:3000,http://localhost
+      - SECURE_SSL_REDIRECT=False
+      - FRONTEND_URL=http://localhost:3000
+    volumes:
+      - ./backend/media:/app/media
+      - ./backend/faiss_index:/app/faiss_index
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    command: >
+      sh -c "python manage.py migrate &&
+             gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 2 --timeout 120"
+
+  # Frontend (Nginx + React)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: smart-study-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
