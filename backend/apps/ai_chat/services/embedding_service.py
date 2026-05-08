@@ -1,37 +1,64 @@
-
+"""
+Embedding service - matnni vector'ga (Gemini API).
+"""
 import logging
 
-from sentence_transformers import SentenceTransformer
+import google.generativeai as genai
+from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
 
 class EmbeddingService:
-    """Singleton pattern bilan embedding."""
+    """Gemini API embeddings - juda kam xotira."""
     
-    _model = None
+    _configured = False
     
     @classmethod
-    def get_model(cls):
-        if cls._model is None:
-            logger.info('Loading sentence-transformer model...')
-            cls._model = SentenceTransformer(
-                'sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2'
-            )
-            logger.info('Model loaded.')
-        return cls._model
+    def _configure(cls):
+        if not cls._configured:
+            genai.configure(api_key=settings.GEMINI_API_KEY)
+            cls._configured = True
     
     @classmethod
     def encode(cls, texts):
-        model = cls.get_model()
+        """
+        Matnni vector'ga aylantirish.
+        
+        Args:
+            texts: str yoki list[str]
+        
+        Returns:
+            numpy.ndarray: shape (N, 768)
+        """
+        import numpy as np
+        
+        cls._configure()
+        
         if isinstance(texts, str):
             texts = [texts]
-        embeddings = model.encode(texts, show_progress_bar=False)
-        return embeddings
+        
+        embeddings = []
+        
+        for text in texts:
+            try:
+                result = genai.embed_content(
+                    model='models/text-embedding-004',
+                    content=text,
+                    task_type='retrieval_document',
+                )
+                embeddings.append(result['embedding'])
+            except Exception as e:
+                logger.error(f'Embedding error: {e}')
+                # Bo'sh vector qaytaramiz xato bo'lsa
+                embeddings.append([0.0] * 768)
+        
+        return np.array(embeddings, dtype='float32')
     
     @classmethod
     def get_dimension(cls):
-        return 384
+        """Gemini text-embedding-004 dimension."""
+        return 768
 
 
 def split_text_into_chunks(text, chunk_size=500, chunk_overlap=50):
