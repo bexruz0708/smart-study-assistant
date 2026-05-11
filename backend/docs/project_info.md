@@ -1,284 +1,351 @@
-# Smart Study Assistant - Loyiha Haqida
+# Smart Study Assistant - Loyiha Hujjati
 
-## Loyiha nomi
-Smart Study Assistant - AI yordamida o'rganish platformasi
+## Umumiy ma'lumot
 
-## Maqsad
-Talabalar uchun AI yordamchi yaratish, ular yuklagan o'quv materiallari (PDF, Word) asosida:
-- AI bilan suhbat qilish
-- Avtomatik test yaratish
-- Flashkartalar tuzish
-- O'rganish jarayonini tezlashtirish
+**Smart Study Assistant** - bu AI yordamida o'rganish platformasi. Foydalanuvchilar PDF/Word hujjatlarini yuklab, ulardagi mavzular haqida AI bilan suhbatlasha oladi, avtomatik testlar va flashkartalar yarata oladi.
 
-## Muallif
-Bexruz Shakarov - Universitet talabasi (2-kurs)
+Loyiha **diplom ishi** sifatida ishlab chiqilgan. Hozirgi paytda **to'liq tayyor** va internetda **jonli** ishlamoqda.
+
+## Loyiha holati
+
+✅ **Backend - to'liq tayyor**
+✅ **Frontend - to'liq tayyor**
+✅ **Internetda jonli (deployed)**
+✅ **AI funksiyalari ishlamoqda**
+
+## Live URL'lar
+
+- **Frontend (Vercel):** https://smart-study-iota-lilac.vercel.app
+- **Backend API (Render):** https://smart-study-assistant-10x4.onrender.com
 
 ## Texnologiyalar Stack
 
 ### Backend
 - **Framework:** Django 5.0.6
 - **API:** Django REST Framework 3.15.1
-- **Authentication:** JWT (djangorestframework-simplejwt 5.3.1)
-- **Til:** Python 3.12.8
-- **Sintaksis:** Object-Oriented Programming (OOP)
+- **Authentication:** JWT (djangorestframework-simplejwt) - 60 daqiqa access, 7 kun refresh
+- **Database:** SQLite (dev), PostgreSQL (production)
+- **AI Model:** Google Gemini 2.5 Flash
+- **Vector Search:** FAISS (Facebook AI Similarity Search)
+- **Embeddings:** Gemini text-embedding-004 (768 dimensions)
+- **Document Parsing:** pypdf, python-docx
+- **PDF Generation:** ReportLab
+- **Production Server:** Gunicorn + WhiteNoise
 
-### Database
-- **Development:** SQLite 3 (lokal ishlash uchun)
-- **Production:** PostgreSQL 15 (kelajakda server uchun)
-- **ORM:** Django ORM (SQL yozmasdan ishlash imkoniyati)
-
-### AI va Machine Learning
-- **LLM (Language Model):** Google Gemini 1.5 Flash (bepul, tez)
-- **Embedding Model:** Sentence Transformers (paraphrase-multilingual-MiniLM-L12-v2)
-- **Vector Database:** FAISS (Facebook AI Similarity Search)
-- **RAG Framework:** LangChain 0.2.5
-- **Document Parsing:** pypdf 4.2.0, python-docx 1.1.2
-
-### Frontend (kelayotgan bosqich)
-- **Framework:** React 18
-- **Build Tool:** Vite
-- **Styling:** Tailwind CSS
-- **Routing:** React Router
-- **HTTP Client:** Axios
+### Frontend
+- **Framework:** React 18.3.1
+- **Build Tool:** Vite 5.4.11
+- **Styling:** Tailwind CSS 3.4.17
+- **State Management:** Zustand 5.0.2
+- **HTTP Client:** Axios (with JWT interceptors)
+- **Forms:** React Hook Form + Zod validation
+- **Routing:** React Router v7
+- **Icons:** Lucide React
+- **Markdown:** react-markdown + remark-gfm
+- **Notifications:** Sonner (toast)
+- **i18n:** react-i18next (Uzbek/English/Russian)
 
 ### DevOps
-- **Containerization:** Docker + Docker Compose
+- **Backend Hosting:** Render.com (Free tier)
+- **Frontend Hosting:** Vercel (Free tier)
+- **Database Hosting:** Render PostgreSQL
 - **Version Control:** Git + GitHub
-- **API Testing:** REST Client (VS Code)
+- **CI/CD:** Avtomatik deploy GitHub push'dan
 
-## Loyiha Arxitekturasi
-
-### Folder Structure (Senior-level)
+## Loyiha Strukturasi
 smart-study-assistant/
 ├── backend/
-│   ├── apps/                    # Barcha Django app'lar
-│   │   ├── users/              # Foydalanuvchilar
-│   │   ├── documents/          # Hujjatlar
-│   │   ├── ai_chat/            # AI suhbat
-│   │   ├── quizzes/            # Testlar (kelayotgan)
-│   │   └── flashcards/         # Flashkartalar (kelayotgan)
-│   ├── core/                    # Umumiy yordamchi kod
+│   ├── apps/
+│   │   ├── users/          # Custom User Model + JWT Auth
+│   │   ├── documents/      # PDF/DOCX upload va parsing
+│   │   ├── ai_chat/        # RAG chat + Project Info
+│   │   ├── quizzes/        # AI Quiz Generator
+│   │   └── flashcards/     # AI Flashcards
 │   ├── config/
-│   │   └── settings/
-│   │       ├── base.py         # Umumiy sozlamalar
-│   │       ├── development.py  # Lokal
-│   │       └── production.py   # Server
-│   ├── manage.py
-│   └── .env                     # Maxfiy sozlamalar
-└── frontend/                    # React app (kelayotgan)
-### Settings Architecture
-Loyihada **3 qismli settings** ishlatildi (Senior best practice):
-- `base.py` - umumiy
-- `development.py` - lokal (DEBUG=True, SQLite)
-- `production.py` - server (DEBUG=False, PostgreSQL, SSL)
-
+│   │   └── settings/       # base.py, development.py, production.py
+│   ├── docs/
+│   │   └── project_info.md # Bu fayl - AI uchun
+│   ├── requirements.txt
+│   └── manage.py
+└── frontend/
+└── src/
+├── api/            # Axios + endpoint functions
+├── components/     # UI komponentlar
+├── pages/          # Sahifalar (10+ ta)
+├── store/          # Zustand stores
+├── routes/         # Protected/Public routes
+└── i18n/           # Tarjimalar (uz/en/ru)
 ## Database Modellari
 
 ### 1. User (Custom)
-**Fayl:** `apps/users/models.py`
-
-Standart Django User'dan farqli — **email bilan login** qiladi (username yo'q):
+Standart Django User o'rniga email-asoslangan custom model.
 - `email` (unique, indexed)
 - `first_name`, `last_name`
-- `avatar` (ImageField)
-- `is_active`, `is_staff`, `is_verified`
+- `is_verified`, `is_active`, `is_staff`
 - `date_joined`
-
-**Maxsus:** `AbstractBaseUser + PermissionsMixin` dan meros olingan, parol PBKDF2-SHA256 bilan HASH qilinadi.
+- `USERNAME_FIELD = 'email'`
 
 ### 2. Document
-**Fayl:** `apps/documents/models.py`
-
-Foydalanuvchi yuklagan fayllar:
-- `user` (ForeignKey - User)
-- `title`, `file`
-- `file_type` (PDF, DOCX, TXT)
-- `file_size`, `page_count`, `word_count`
-- `extracted_text` - PDF/Word'dan ajratilgan matn
-- `status` (PENDING, PROCESSING, COMPLETED, FAILED)
-
-**Indekslar:** `(user, -created_at)` va `(status)` - tezkor qidirish uchun.
+- `user` (FK)
+- `file`, `title`, `file_type` (PDF/DOCX/TXT)
+- `extracted_text`, `page_count`, `word_count`
+- `status` (PENDING/PROCESSING/COMPLETED/FAILED)
 
 ### 3. ChatSession
-**Fayl:** `apps/ai_chat/models.py`
-
-AI bilan suhbat sessiyalari:
-- `user`, `document`
-- `session_type` (DOCUMENT, PROJECT_INFO) - 2 rejim
-- `is_indexed` - FAISS bazasida indekslanganmi
-- `title`
+- `user` (FK), `document` (FK, nullable)
+- `session_type` (DOCUMENT / PROJECT_INFO)
+- `title`, `is_indexed`
 
 ### 4. Message
-**Fayl:** `apps/ai_chat/models.py`
+- `session` (FK)
+- `role` (USER / ASSISTANT)
+- `content`, `sources` (JSON), `tokens_used`
 
-Suhbatdagi xabarlar:
-- `session` (ForeignKey)
-- `role` (USER, ASSISTANT)
-- `content` - matn
-- `sources` (JSONField) - qaysi PDF qismlaridan foydalanilgan
-- `tokens_used` - AI token soni
+### 5. Quiz + Question + QuizAttempt
+- AI yordamida yaratilgan testlar
+- 4 ta variantli savollar (A/B/C/D)
+- Foydalanuvchi javoblari va natijalar
 
-## API Endpoints (REST API)
+### 6. FlashcardDeck + Flashcard
+- AI yordamida yaratilgan kartochkalar
+- Front/Back format
+- Review statistics (correct/incorrect count)
 
-Barcha API'lar `/api/v1/` prefiksi bilan boshlanadi (versioning).
+## API Endpoints
 
-### Authentication (`/api/v1/auth/`)
-- `POST /register/` - Ro'yxatdan o'tish
-- `POST /login/` - Kirish (email + parol)
-- `POST /logout/` - Chiqish (token blacklist)
-- `POST /token/refresh/` - Access token yangilash
-- `GET/PATCH /profile/` - Profil ko'rish/tahrirlash
-- `POST /change-password/` - Parol o'zgartirish
+Barcha endpoint'lar `/api/v1/` ostida.
 
-### Documents (`/api/v1/documents/`)
-- `GET /` - Hujjatlar ro'yxati
-- `POST /` - Yangi PDF/Word yuklash
-- `GET /{id}/` - Bitta hujjat
-- `DELETE /{id}/` - O'chirish
-- `POST /{id}/reprocess/` - Qayta parse qilish
+### Authentication
+- `POST /auth/register/` - Ro'yxatdan o'tish
+- `POST /auth/login/` - Kirish (JWT qaytaradi)
+- `POST /auth/logout/` - Chiqish (refresh token blacklist)
+- `POST /auth/token/refresh/` - Token yangilash
+- `GET/PATCH /auth/profile/` - Profil
+- `POST /auth/change-password/` - Parol o'zgartirish
 
-### AI Chat (`/api/v1/chat/`)
-- `GET /sessions/` - Sessiyalar ro'yxati
-- `POST /sessions/` - Yangi suhbat
-- `GET /sessions/{id}/` - Bitta suhbat (xabarlar bilan)
-- `POST /sessions/{id}/ask/` - PDF haqida savol berish
-- `POST /project-info/ask/` - **Loyiha haqida savol berish**
+### Documents
+- `GET/POST /documents/` - Ro'yxat / Yuklash
+- `GET/DELETE /documents/{id}/` - Detail / O'chirish
+- `POST /documents/{id}/reprocess/` - Qayta parse
 
-## RAG (Retrieval-Augmented Generation) Tizimi
+### AI Chat (RAG)
+- `GET/POST /chat/sessions/` - Sessiyalar
+- `GET/DELETE /chat/sessions/{id}/` - Detail
+- `POST /chat/sessions/{id}/ask/` - PDF haqida savol
+- `POST /chat/project-info/ask/` - **Loyiha haqida savol** ⭐
+- `GET /chat/sessions/{id}/messages/` - Xabarlar
 
-Loyihaning **eng muhim qismi**. Quyidagicha ishlaydi:
+### Quizzes (AI)
+- `GET/POST /quizzes/` - Ro'yxat
+- `POST /quizzes/generate/` - AI bilan yaratish
+- `POST /quizzes/{id}/submit/` - Javoblarni yuborish
+- `GET /quizzes/attempts/` - Urinishlar tarixi
+- `GET /quizzes/attempts/{id}/pdf/` - PDF eksport
 
-### Indekslash bosqichi (1 marta):
-1. PDF/Word yuklanadi
-2. `pypdf` orqali matn ajratiladi
-3. Matn 500 so'zlik **chunks**'larga bo'linadi
-4. Har bir chunk **Sentence Transformer** orqali **vector**'ga aylantirildi (384 o'lchamli)
-5. Vectorlar **FAISS** indeksiga saqlanadi
+### Flashcards (AI)
+- `GET/POST /flashcards/` - Ro'yxat
+- `POST /flashcards/generate/` - AI bilan yaratish
+- `POST /flashcards/cards/{id}/review/` - Karta ko'rilgan
 
-### Savol berish bosqichi (har safar):
-1. Foydalanuvchi savol beradi
-2. Savol ham vectorga aylantirildi
-3. FAISS bazadan **eng yaqin 3 ta chunk** topiladi (semantic search)
-4. Chunks + savol **Gemini AI**'ga yuboriladi
-5. AI faqat shu kontekst asosida javob beradi
+## RAG (Retrieval Augmented Generation)
 
-### Afzalliklari:
-- ChatGPT'dan farqli — **aniq sizning hujjatingizdan** javob
-- Galyutsinatsiya kam (AI uydirma qilmaydi)
-- Tezlik (FAISS millisekundda qidiradi)
-- Bepul (Gemini bepul, FAISS bepul, Sentence Transformers bepul)
+RAG - AI'ning umumiy bilimi bilan emas, **foydalanuvchi hujjatlari** asosida javob berishini ta'minlovchi texnologiya.
+
+### Ishlash jarayoni:
+
+1. **Document Upload** - foydalanuvchi PDF yuklaydi
+2. **Text Extraction** - `pypdf` bilan matn ajratiladi
+3. **Chunking** - matn 500 so'zli bo'laklarga bo'linadi (50 so'z overlap bilan)
+4. **Embedding** - har bir chunk Gemini text-embedding-004 orqali 768-dimensional vektor'ga aylantiriladi
+5. **Indexing** - vektorlar FAISS indeksiga saqlanadi
+6. **Question** - foydalanuvchi savol beradi
+7. **Search** - savol ham vektor'ga aylantiriladi, FAISS eng yaqin 3 ta chunk'ni topadi
+8. **Prompt** - Gemini'ga "kontekst + savol" yuboriladi
+9. **Answer** - Gemini faqat kontekst asosida javob beradi
+
+### Project Info Chat (maxsus)
+
+Bu sahifa - loyihaning o'zi haqida savollarga javob berish uchun maxsus tayyorlangan. Diplom himoyasida professor istalgan texnik savolni berishi mumkin, AI loyihaning hujjati (bu fayl) asosida professional javob beradi.
+
+## Frontend Sahifalari (10+ ta)
+
+1. **Landing/Login** - Chiroyli auth sahifa (gradient design)
+2. **Register** - Parol kuchi indikatori bilan
+3. **Dashboard** - Statistika kartochkalari, so'nggi hujjatlar
+4. **Documents** - Drag & drop upload, qidiruv, grid view
+5. **AI Chat** - ChatGPT'ga o'xshash interface, sources accordion
+6. **Project Info Chat** - Tavsiya etilgan savollar bilan ⭐
+7. **Quizzes** - AI bilan test yaratish, ishlash, natija
+8. **Quiz Detail** - Bosqichma-bosqich test, PDF eksport
+9. **Flashcards** - 3D flip animatsiya, "Bildim/Bilmadim"
+10. **Profile** - Ma'lumot va parol o'zgartirish, tab'lar bilan
+
+### UI/UX xususiyatlari
+- **Dark mode** - to'liq qo'llab-quvvatlanadi
+- **Multi-language** - O'zbekcha, English, Русский
+- **Responsive** - mobil qurilmalar uchun moslangan
+- **Animations** - Framer Motion + Tailwind animations
+- **Toast notifications** - Sonner bilan
+- **Form validation** - React Hook Form + Zod
 
 ## Xavfsizlik
 
-### Authentication
-- **JWT** tokenlar (access: 60 daqiqa, refresh: 7 kun)
-- **Token rotation** - har refresh'da yangi token
-- **Blacklist** - logout'da tokenni bekor qilish
-- Parollar **PBKDF2-SHA256** bilan HASH qilinadi
+- **JWT Authentication** - access (60 min) + refresh (7 days)
+- **Token Refresh** - frontend axios interceptor avtomatik yangilaydi
+- **Token Blacklist** - logout'da refresh token bloklanadi
+- **Password Hashing** - Django PBKDF2 (default)
+- **CORS** - faqat ruxsat etilgan domenlar
+- **HTTPS** - Vercel va Render avtomatik
+- **CSRF Protection** - Django default
+- **SQL Injection** - Django ORM oldini oladi
+- **XSS Protection** - React JSX avtomatik escape qiladi
 
-### Authorization
-- Har bir foydalanuvchi **faqat o'z** hujjatlarini ko'radi
-- Document ID orqali boshqalarning hujjatiga kirish — **mumkin emas**
+## Production Deploy
 
-### Configuration
-- Maxfiy ma'lumotlar (`.env` faylida)
-- `.gitignore` orqali GitHub'ga chiqmasligi
-- 3 qismli settings (development/production)
+### Backend (Render.com)
+- **Service Type:** Web Service (Free tier)
+- **Build Command:** `pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate`
+- **Start Command:** `gunicorn config.wsgi:application --workers 1 --timeout 180`
+- **Environment Variables:**
+  - `SECRET_KEY`
+  - `DATABASE_URL` (PostgreSQL)
+  - `GEMINI_API_KEY`
+  - `ALLOWED_HOSTS`
+  - `CORS_ALLOWED_ORIGINS`
+- **Auto-deploy** GitHub push'dan
 
-### Production qo'shimchalari
-- HTTPS majburiy (`SECURE_SSL_REDIRECT`)
-- HSTS (1 yil)
-- Secure Cookies
-- CORS faqat ishonchli domenlar uchun
+### Frontend (Vercel)
+- **Framework Preset:** Vite
+- **Root Directory:** `frontend`
+- **Build Command:** `npm run build`
+- **Output Directory:** `dist`
+- **Environment Variables:**
+  - `VITE_API_URL` (Render backend URL)
+- **vercel.json** - SPA routing uchun rewrites
+- **Auto-deploy** GitHub push'dan
 
-## Performance Optimizatsiya
+### Database (PostgreSQL)
+- Render-managed PostgreSQL (Free tier)
+- 1 GB storage, 90 kun retention
+- Automatic backups
 
-### Database
-- Indekslar (`db_index`, `Meta.indexes`)
-- ForeignKey'larda `select_related` (kelayotgan bosqichda)
-- Pagination (PAGE_SIZE=20)
+## Performance Optimizations
 
-### AI
-- Sentence Transformer **singleton** pattern (bir marta yuklash)
-- FAISS indeks **diskka** saqlanadi (qayta hisoblash shart emas)
-- Chunks overlap (50 so'z) — kontekst yo'qolmaydi
+- **FAISS** - million vektorlar orasidan millisekundlarda qidiruv
+- **Singleton Pattern** - Embedding model bir marta yuklanadi
+- **WhiteNoise** - static files samarali yetkaziladi
+- **PostgreSQL Connection Pool** - `conn_max_age=600`
+- **Lazy Loading** - frontend route'lari kerakli paytda yuklanadi
+- **React Query** - API caching (planned for v2)
 
-## Testing
+## FAQ - Tez-tez beriladigan savollar
 
-### Backend Testing
-- **Pytest** + pytest-django
-- Coverage tracking (pytest-cov)
-- Factory Boy (mock data)
+### Savol: Bu loyihani o'zing yozdingmi yoki AI'dan foydalandingmi?
 
-### API Testing
-- VS Code REST Client (`api-tests.http`)
-- Manual brauzer test (DRF Browsable API)
+**Javob:** AI yordamida (Cursor, Claude). Bu **zamonaviy dasturchi yondashuvi**. Lekin har bir kod qatorini tushunaman va loyihaning butun arxitekturasini bilaman. Buni isbotlash uchun maxsus **Project Info Chat** sahifasini yaratdim - istalgan texnik savolingizga javob bera olaman.
 
-## Deployment Plan (10-bosqich)
+### Savol: Custom User Model nima uchun yaratilgan?
 
-### Docker
-- Multi-stage Dockerfile
-- docker-compose.yml (backend, postgres, redis, frontend)
-- One-command deployment: `docker-compose up`
+**Javob:** Standart Django User'da `username` maydoni majburiy. Zamonaviy saytlarda esa email bilan login qilinadi. Custom User Model orqali email-asoslangan auth qildim. Bu **Django'ning rasmiy tavsiyasi** (https://docs.djangoproject.com/en/5.0/topics/auth/customizing/#using-a-custom-user-model-when-starting-a-project).
 
-### Hosting
-- **Backend:** Render yoki Railway (bepul)
-- **Frontend:** Vercel (bepul)
-- **Database:** Supabase yoki Neon (bepul)
+### Savol: JWT vs Session - farqi nima?
 
-## Loyiha Statistikasi
+**Javob:** 
+- **Session** - server'da saqlanadi, har request'da database'ga query
+- **JWT** - stateless, server'da hech narsa saqlanmaydi, signature tekshiriladi
+- **JWT** mobile apps va SPA'lar uchun yaxshiroq
+- Loyihada **JWT** ishlatildi chunki frontend (React) va backend alohida
 
-- **Bosqichlar:** 10 ta
-- **Django apps:** 5 ta (users, documents, ai_chat, quizzes, flashcards)
-- **Models:** 8 ta
-- **API endpoints:** 25+ ta
-- **Kod hajmi:** ~3000+ qator (backend)
+### Savol: RAG nima va nega ishlatdingiz?
 
-## Foydalanilgan Pattern'lar
+**Javob:** RAG (Retrieval Augmented Generation) - AI'ning umumiy bilimi bilan emas, **mening hujjatlarim** asosida javob berishini ta'minlaydi. Bu:
+- Aniq va to'g'ri javoblar
+- Manba ko'rsatish imkoniyati (sources)
+- Maxfiy/maxsus ma'lumotlar bilan ishlash
+- Hallucination'ni kamaytirish (AI o'ylab topilgan ma'lumot bermaydi)
 
-1. **Repository Pattern** - `services.py` (biznes logika ajratilgan)
-2. **Singleton Pattern** - EmbeddingService.get_model()
-3. **Factory Pattern** - DocumentParser
-4. **Strategy Pattern** - file_type bo'yicha parser tanlash
-5. **Custom Manager** - UserManager
-6. **REST API Best Practices** - URL versioning (v1)
+### Savol: FAISS o'rniga ChromaDB ishlatish mumkinmi?
 
-## Foydalanilgan Adabiyotlar
+**Javob:** Ha. ChromaDB - bu **vector database**, FAISS esa **library**. Loyihada FAISS'ni tanladim chunki:
+- Tezroq (Facebook tomonidan optimallashtirilgan)
+- Hech qanday server kerak emas (oddiy fayl)
+- Free tier'da yaxshi ishlaydi
+- 100K dan kam vektorlar uchun yetarli
 
-- Django Documentation: https://docs.djangoproject.com/
-- DRF Documentation: https://www.django-rest-framework.org/
-- LangChain Documentation: https://python.langchain.com/
-- Gemini AI: https://ai.google.dev/
-- FAISS Documentation: https://faiss.ai/
+Katta loyiha bo'lganida Pinecone yoki ChromaDB tanlardim.
 
-## Loyihaning kelajagi
+### Savol: Frontend uchun nima ishlatdingiz?
 
-### Kelayotgan funksiyalar:
-- Voice input (ovozli savol-javob)
-- Image OCR (rasm orqali savol)
-- Multi-language (rus, ingliz, qoraqalpoq)
-- Mobile app (React Native)
-- Gamification (ochkolar, darajalar)
+**Javob:** **React 18 + Vite + Tailwind CSS**. State uchun **Zustand** (Redux'dan oddiy va kichikroq). API uchun **Axios + JWT interceptor** (token avtomatik refresh). Forms uchun **React Hook Form + Zod** validation. Icons uchun **Lucide React**.
 
-## Tez-tez beriladigan savollar (FAQ)
+Zamonaviy stack, **production-ready** va junior dasturchi ham tushunadigan darajada toza.
 
-**Savol:** Nega Django va React?
-**Javob:** Django - Python'ning eng kuchli web framework'i, REST API uchun ideal. React - eng mashhur frontend kutubxonasi, dinamik UI uchun.
+### Savol: Loyihaning xavfsizlik tomonlari qanday?
 
-**Savol:** Nega SQLite va PostgreSQL?
-**Javob:** SQLite - lokal ishlash uchun yetarli (fayl-asoslangan). PostgreSQL - server uchun (concurrent users, indekslar, advanced features).
+**Javob:** Bir necha qatlamli:
+1. **Auth** - JWT (HMAC-SHA256 signed)
+2. **Password** - PBKDF2 hash
+3. **HTTPS** - Render va Vercel avtomatik
+4. **CORS** - faqat ruxsat etilgan domenlar
+5. **CSRF** - Django default
+6. **SQL Injection** - ORM oldini oladi
+7. **XSS** - React JSX escape qiladi
+8. **Rate Limiting** - DRF throttling (planned)
 
-**Savol:** Nega Gemini, ChatGPT emas?
-**Javob:** Gemini Google'ning bepul AI'si bo'lib, kuniga 1500 request bepul. ChatGPT API - pulli ($20/oy). Talaba uchun Gemini ideal.
+### Savol: Kelajakda nima qo'shasiz?
 
-**Savol:** Nega FAISS, ChromaDB emas?
-**Javob:** ChromaDB Windows'da o'rnatilishi qiyin (C++ kompilyator kerak). FAISS - Facebook tomonidan, juda tez, oson o'rnatiladi, professional ko'rinadi.
+**Javob:**
+- **WebSockets** (Django Channels) - real-time chat streaming
+- **Celery + Redis** - background tasks (PDF parsing katta fayllar uchun)
+- **Mobile App** - React Native
+- **Voice Input** - savol ovoz bilan berish
+- **Video Support** - YouTube transcripts bilan ishlash
+- **Collaborative Learning** - bir nechta foydalanuvchi bir hujjatda ishlash
+- **Gamification** - ballar, leaderboards
+- **OAuth** - Google/Apple bilan login
 
-**Savol:** RAG nima va nega kerak?
-**Javob:** RAG (Retrieval-Augmented Generation) - AI'ga foydalanuvchi hujjati asosida javob berishga imkon beradi. Oddiy ChatGPT umumiy javob beradi, RAG aniq sizning kontekstdan javob beradi.
+### Savol: Deploy qaerda?
 
-**Savol:** Custom User Model nima uchun?
-**Javob:** Standart Django User'da `username` majburiy. Zamonaviy saytlar (Gmail, Instagram) email bilan login qiladi. Shuning uchun email-asoslangan custom User yaratdim.
+**Javob:**
+- **Frontend:** Vercel.com (https://smart-study-iota-lilac.vercel.app)
+- **Backend:** Render.com (https://smart-study-assistant-10x4.onrender.com)
+- **Database:** Render PostgreSQL
+- **CI/CD:** GitHub push → avtomatik deploy
 
-**Savol:** JWT vs Session - nega JWT?
-**Javob:** JWT stateless - server xotira ishlatmaydi, scale qilish oson. Session - har request'da databazaga murojaat. JWT zamonaviy API'lar uchun standart.
+Ikkalasi ham **bepul tier** ishlatdim. Production'da Tier 1 ($7/oy) kerak bo'lardi.
+
+### Savol: Tabriqlar! Va biror kamchilik bormi?
+
+**Javob:** Albatta, bu **MVP** (Minimum Viable Product). Yaxshilash kerak:
+- **Rate limiting** - DDOS himoyasi
+- **Monitoring** - Sentry yoki LogRocket
+- **Tests** - unit tests va integration tests
+- **Caching** - Redis bilan
+- **Error tracking** - production'da xatolarni kuzatish
+- **Analytics** - foydalanuvchi xatti-harakatini o'rganish
+- **A/B Testing** - UX yaxshilash uchun
+
+Lekin **diplom uchun yetarli** va asosiy konseptni isbotlaydi.
+
+## Akademik Konteks
+
+Bu loyiha [Universitet nomi] uchun **diplom ishi** sifatida ishlab chiqilgan. Quyidagilarni namoyish etadi:
+
+- ✅ **Modern web development** (React, Django REST)
+- ✅ **AI/ML integration** (RAG, Vector Search, LLM)
+- ✅ **Production deployment** (Docker-ready, CI/CD)
+- ✅ **Clean architecture** (separation of concerns)
+- ✅ **Security best practices** (JWT, CORS, HTTPS)
+- ✅ **DevOps** (GitHub, Render, Vercel)
+
+## Muallif
+
+**Bexruz Shakarov**
+- GitHub: https://github.com/bexruz0708/smart-study-assistant
+- Email: bexruzshakarov7@gmail.com
+- University: [Universitet nomi]
+- Year: 2026
+
+---
+
+**Smart Study Assistant** - AI yordamida o'rganishni qulayroq, samaraliroq va qiziqarliroq qiluvchi platforma.
