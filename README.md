@@ -1,4 +1,4 @@
-# 🎓 Smart Study Assistant
+#  Smart Study Assistant
 
 > AI-powered learning platform with RAG, automatic quizzes, and flashcards
 
@@ -9,25 +9,25 @@
 [![React](https://img.shields.io/badge/react-18-blue)](https://react.dev)
 [![Status](https://img.shields.io/badge/status-active-success)](https://smart-study-iota-lilac.vercel.app)
 
-## 🌐 Live Demo
+##  Live Demo
 
-🚀 **Try it now:** [smart-study-iota-lilac.vercel.app](https://smart-study-iota-lilac.vercel.app)
+ **Try it now:** [smart-study-iota-lilac.vercel.app](https://smart-study-iota-lilac.vercel.app)
 
-📡 **API:** [smart-study-assistant-10x4.onrender.com](https://smart-study-assistant-10x4.onrender.com)
+ **API:** [smart-study-assistant-10x4.onrender.com](https://smart-study-assistant-10x4.onrender.com)
 
-## ✨ Features
+##  Features
 
-- 🔐 **Email-based Authentication** — JWT with refresh tokens
-- 📚 **Document Upload** — PDF, DOCX, TXT with drag & drop (max 10MB)
-- 💬 **AI Chat (RAG)** — Chat with your documents using Google Gemini
-- 🎯 **Auto Quiz Generation** — AI creates 5-20 multiple-choice questions
-- 🎴 **Smart Flashcards** — AI-generated cards with 3D flip animation
-- 🎓 **Project Info Chat** — AI assistant about the project itself
-- 🌍 **Multi-language** — Uzbek, English, Russian
-- 🌙 **Dark Mode** — Beautiful UI with theme switcher
-- 📱 **Mobile Responsive** — Works perfectly on all devices
+-  **Email-based Authentication** — JWT with refresh tokens
+- **Document Upload** — PDF, DOCX, TXT with drag & drop (max 10MB)
+-  **AI Chat (RAG)** — Chat with your documents using Google Gemini
+-  **Auto Quiz Generation** — AI creates 5-20 multiple-choice questions
+-  **Smart Flashcards** — AI-generated cards with 3D flip animation
+-  **Project Info Chat** — AI assistant about the project itself
+-  **Multi-language** — Uzbek, English, Russian
+- **Dark Mode** — Beautiful UI with theme switcher
+-  **Mobile Responsive** — Works perfectly on all devices
 
-## 🛠️ Tech Stack
+##Tech Stack
 
 ### Backend
 - **Framework:** Django 5.0.6 + Django REST Framework 3.15.1
@@ -72,7 +72,7 @@
               └───────────┘         └─────────────────┘
 \`\`\`
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 - Python 3.12+
@@ -121,7 +121,7 @@ docker-compose up --build
 - Frontend: http://localhost:3000
 - Backend: http://localhost:8000
 
-## 📁 Project Structure
+##  Project Structure
 
 \`\`\`
 smart-study-assistant/
@@ -152,7 +152,7 @@ smart-study-assistant/
 └── README.md
 \`\`\`
 
-## 🔑 Environment Variables
+##  Environment Variables
 
 ### Backend (.env)
 \`\`\`env
@@ -169,7 +169,7 @@ ALLOWED_HOSTS=localhost,127.0.0.1
 VITE_API_URL=http://127.0.0.1:8000/api/v1
 \`\`\`
 
-## 📚 API Documentation
+##  API Documentation
 
 Main endpoints under \`/api/v1/\`:
 
@@ -181,22 +181,22 @@ Main endpoints under \`/api/v1/\`:
 | \`/documents/\` | GET/POST | List/Upload documents |
 | \`/chat/sessions/\` | GET/POST | Chat sessions |
 | \`/chat/sessions/{id}/ask/\` | POST | Ask AI about document |
-| \`/chat/project-info/ask/\` | POST | Project info chat ⭐ |
+| \`/chat/project-info/ask/\` | POST | Project info chat  |
 | \`/quizzes/generate/\` | POST | Generate AI quiz |
 | \`/quizzes/{id}/submit/\` | POST | Submit quiz answers |
 | \`/flashcards/generate/\` | POST | Generate flashcards |
 
-## 🎓 Academic Context
+##  Academic Context
 
 This project was developed as a graduation thesis demonstrating:
 
-- ✅ Modern full-stack web development
-- ✅ AI/ML integration (RAG, Vector Search, LLM)
-- ✅ Production deployment (CI/CD, cloud hosting)
-- ✅ Clean architecture (separation of concerns)
-- ✅ Security best practices (JWT, CORS, HTTPS)
+-  Modern full-stack web development
+-  AI/ML integration (RAG, Vector Search, LLM)
+-  Production deployment (CI/CD, cloud hosting)
+-  Clean architecture (separation of concerns)
+-  Security best practices (JWT, CORS, HTTPS)
 
-## 🤝 Contributing
+##  Contributing
 
 1. Fork the project
 2. Create your feature branch (\`git checkout -b feature/AmazingFeature\`)
@@ -204,11 +204,11 @@ This project was developed as a graduation thesis demonstrating:
 4. Push to branch (\`git push origin feature/AmazingFeature\`)
 5. Open a Pull Request
 
-## 📄 License
+##  License
 
 Distributed under the MIT License. See \`LICENSE\` for more information.
 
-## 👥 Authors
+##  Authors
 
 **Kamronbek Yusupov** - Co-developer
 **Bexruz Shakarov** - Co-developer
@@ -216,7 +216,7 @@ Distributed under the MIT License. See \`LICENSE\` for more information.
 - GitHub: [@bexruz0708](https://github.com/bexruz0708)
 - Email: bexruzshakarov7@gmail.com
 
-## 🙏 Acknowledgments
+##  Acknowledgments
 
 - [Google Gemini](https://ai.google.dev/) — AI model
 - [FAISS](https://github.com/facebookresearch/faiss) — Vector search
@@ -224,8 +224,4 @@ Distributed under the MIT License. See \`LICENSE\` for more information.
 - [React](https://react.dev) — UI library
 - [Lucide Icons](https://lucide.dev/) — Beautiful icons
 
----
 
-⭐ **If this project helped you, please give it a star!** ⭐
-
-Built with ❤️ in 2026
